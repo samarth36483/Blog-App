@@ -1,8 +1,10 @@
 package com.springboot.blog.page.controller;
 
 import com.springboot.blog.page.dto.PostDTO;
+import com.springboot.blog.page.dto.PostResponse;
 import com.springboot.blog.page.model.Post;
 import com.springboot.blog.page.service.PostService;
+import com.springboot.blog.page.utils.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.springboot.blog.page.utils.AppConstants.*;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -26,9 +30,13 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDTO> getAllPosts(){
-        List<Post> posts = postService.getAllPosts();
-        return posts.stream().map(post -> convertPostToPostDTO(post)).collect(Collectors.toList());
+    public PostResponse getAllPosts(
+            @RequestParam(value = "pageNo", defaultValue = DEFAULT_PAGE_NO, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sorDir", defaultValue = DEFAULT_SORT_DIR, required = false) String sortDir
+    ){
+        return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
     @GetMapping("/{id}")
