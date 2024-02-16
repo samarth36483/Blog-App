@@ -5,6 +5,7 @@ import com.springboot.blog.page.dto.PostResponse;
 import com.springboot.blog.page.model.Post;
 import com.springboot.blog.page.service.PostService;
 import com.springboot.blog.page.utils.AppConstants;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,12 @@ import static com.springboot.blog.page.utils.AppConstants.*;
 public class PostController {
 
     @Autowired
-    PostService postService;
+    private PostService postService;
+    private ModelMapper mapper;
+
+    public PostController(ModelMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO dto){
@@ -42,8 +48,8 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long id){
         Post post = postService.getPostById(id);
-        PostDTO responseDto = convertPostToPostDTO(post);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        PostDTO postDto = convertPostToPostDTO(post);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
@@ -60,12 +66,13 @@ public class PostController {
     }
 
     private PostDTO convertPostToPostDTO(Post post){
-        PostDTO responseDto = new PostDTO();
-        responseDto.setId(post.getId());
-        responseDto.setTitle(post.getTitle());
-        responseDto.setDescription(post.getDescription());
-        responseDto.setContent(post.getContent());
+        PostDTO postDTO = mapper.map(post, PostDTO.class);
 
-        return responseDto;
+//        responseDto.setId(post.getId());
+//        responseDto.setTitle(post.getTitle());
+//        responseDto.setDescription(post.getDescription());
+//        responseDto.setContent(post.getContent());
+
+        return postDTO;
     }
 }

@@ -3,6 +3,7 @@ package com.springboot.blog.page.controller;
 import com.springboot.blog.page.dto.CommentDTO;
 import com.springboot.blog.page.model.Comment;
 import com.springboot.blog.page.service.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,11 @@ import java.util.Set;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    private ModelMapper mapper;
+
+    public CommentController(ModelMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @PostMapping("/{post_id}/comments")
     public ResponseEntity<CommentDTO> createComment(@PathVariable long post_id, @RequestBody CommentDTO commentDTO){
@@ -50,11 +56,11 @@ public class CommentController {
     }
 
     private CommentDTO convertFromCommentToCommentdto(Comment comment){
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(comment.getId());
-        commentDTO.setName(comment.getName());
-        commentDTO.setEmail(comment.getEmail());
-        commentDTO.setBody(comment.getBody());
+        CommentDTO commentDTO = mapper.map(comment, CommentDTO.class);
+//        commentDTO.setId(comment.getId());
+//        commentDTO.setName(comment.getName());
+//        commentDTO.setEmail(comment.getEmail());
+//        commentDTO.setBody(comment.getBody());
 
         return commentDTO;
     }
