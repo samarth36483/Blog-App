@@ -3,6 +3,7 @@ package com.springboot.blog.page.controller;
 import com.springboot.blog.page.dto.CommentDTO;
 import com.springboot.blog.page.model.Comment;
 import com.springboot.blog.page.service.CommentService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class CommentController {
     }
 
     @PostMapping("/{post_id}/comments")
-    public ResponseEntity<CommentDTO> createComment(@PathVariable long post_id, @RequestBody CommentDTO commentDTO){
+    public ResponseEntity<CommentDTO> createComment(@PathVariable long post_id, @Valid @RequestBody CommentDTO commentDTO){
         Comment comment = commentService.createComment(post_id, commentDTO);
         return new ResponseEntity<>(convertFromCommentToCommentdto(comment), HttpStatus.CREATED);
     }
@@ -50,7 +51,7 @@ public class CommentController {
 
     @PatchMapping("/{post_id}/comments/{comment_id}")
     public ResponseEntity<CommentDTO> updateComment(@PathVariable long post_id, @PathVariable long comment_id,
-                                @RequestBody CommentDTO commentDTO){
+                                @Valid @RequestBody CommentDTO commentDTO){
         Comment comment = commentService.updateComment(post_id, comment_id, commentDTO);
         return new ResponseEntity<>(convertFromCommentToCommentdto(comment), HttpStatus.OK);
     }

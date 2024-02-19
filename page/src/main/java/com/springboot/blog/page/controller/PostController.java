@@ -5,6 +5,7 @@ import com.springboot.blog.page.dto.PostResponse;
 import com.springboot.blog.page.model.Post;
 import com.springboot.blog.page.service.PostService;
 import com.springboot.blog.page.utils.AppConstants;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO dto){
+    public ResponseEntity<PostDTO> createPost(@Valid @RequestBody PostDTO dto){
         Post post = postService.createPost(dto);
         PostDTO responseDto = convertPostToPostDTO(post);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -53,7 +54,7 @@ public class PostController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO dto, @PathVariable long id){
+    public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO dto, @PathVariable long id){
         Post post = postService.updatePost(dto, id);
         PostDTO responseDto = convertPostToPostDTO(post);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
