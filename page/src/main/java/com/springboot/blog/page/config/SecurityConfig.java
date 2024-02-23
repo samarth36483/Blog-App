@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) ->
                         //auth.anyRequest().authenticated()
                         auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll()  // no authentication required for GET requests, other than it are all authenticated
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 ).httpBasic(Customizer.withDefaults());
         return http.build();
