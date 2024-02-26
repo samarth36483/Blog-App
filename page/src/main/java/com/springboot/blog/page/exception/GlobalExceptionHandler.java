@@ -37,7 +37,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorDetails> handleGlobalException(Exception e,
                                                                         WebRequest request){
         ErrorDetails details = new ErrorDetails(new Date(), e.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(details, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(details, HttpStatus.UNAUTHORIZED);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.springboot.blog.page.model.Role;
 import com.springboot.blog.page.model.User;
 import com.springboot.blog.page.repository.RoleRepository;
 import com.springboot.blog.page.repository.UserRepository;
+import com.springboot.blog.page.security.JWTTokenProvider;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,16 +29,20 @@ public class AuthServiceImpl implements AuthService {
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private JWTTokenProvider jwtTokenProvider;
     @Override
     public String login(LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsernameOremail(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "Login successfull";
+
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        return token;
     }
 
     @Override

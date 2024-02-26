@@ -1,5 +1,7 @@
 package com.springboot.blog.page.config;
 
+import com.springboot.blog.page.security.JWTAuthenticationEntryPoint;
+import com.springboot.blog.page.security.JwtAutenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity(
@@ -25,10 +29,12 @@ import org.springframework.security.web.SecurityFilterChain;
         jsr250Enabled = true
 )
 public class SecurityConfig {
-
+    @Autowired
+    private JwtAutenticationFilter jwtAutenticationFilter;
+    @Autowired
+    private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
     private UserDetailsService userDetailsService;
-
     // encode password
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -48,7 +54,11 @@ public class SecurityConfig {
                         auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll()  // no authentication required for GET requests, other than it are all authenticated
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
-                ).httpBasic(Customizer.withDefaults());
+                ).exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(Customizer.withDefaults());
+
+        http.addFilterBefore(jwtAutenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
