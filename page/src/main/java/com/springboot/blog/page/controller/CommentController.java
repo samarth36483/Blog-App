@@ -16,11 +16,11 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/posts")
 public class CommentController {
-    @Autowired
     private CommentService commentService;
     private ModelMapper mapper;
 
-    public CommentController(ModelMapper mapper) {
+    public CommentController(CommentService commentService, ModelMapper mapper) {
+        this.commentService = commentService;
         this.mapper = mapper;
     }
 

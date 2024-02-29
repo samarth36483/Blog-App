@@ -29,12 +29,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         jsr250Enabled = true
 )
 public class SecurityConfig {
-    @Autowired
     private JwtAutenticationFilter jwtAutenticationFilter;
-    @Autowired
     private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    @Autowired
     private UserDetailsService userDetailsService;
+
+    public SecurityConfig(JwtAutenticationFilter jwtAutenticationFilter, JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint, UserDetailsService userDetailsService) {
+        this.jwtAutenticationFilter = jwtAutenticationFilter;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.userDetailsService = userDetailsService;
+    }
+
     // encode password
     @Bean
     public static PasswordEncoder passwordEncoder(){

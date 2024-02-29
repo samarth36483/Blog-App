@@ -24,12 +24,12 @@ import static com.springboot.blog.page.utils.AppConstants.*;
 @RequestMapping("/api/posts")
 public class PostController {
 
-    @Autowired
     private PostService postService;
     private ModelMapper mapper;
 
-    public PostController(ModelMapper mapper) {
+    public PostController(ModelMapper mapper, PostService postService) {
         this.mapper = mapper;
+        this.postService = postService;
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -23,16 +23,24 @@ import java.util.Set;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private RoleRepository roleRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
     private JWTTokenProvider jwtTokenProvider;
+
+    public AuthServiceImpl(UserRepository userRepository,
+                           RoleRepository roleRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JWTTokenProvider jwtTokenProvider) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
     @Override
     public String login(LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
