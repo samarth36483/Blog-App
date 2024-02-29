@@ -57,6 +57,12 @@ public class PostController {
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
+    @GetMapping("/category/{category_id}")
+    public ResponseEntity<List<PostDTO>> getPostByCategory(@PathVariable long category_id){
+        List<PostDTO> posts = postService.getPostByCategory(category_id);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody PostDTO dto, @PathVariable long id){
