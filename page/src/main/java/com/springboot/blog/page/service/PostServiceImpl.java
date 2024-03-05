@@ -40,8 +40,7 @@ public class PostServiceImpl implements PostService{
         post.setDescription(dto.getDescription());
         post.setContent(dto.getContent());
         post.setCategory(category);
-        postRepository.save(post);
-        return post;
+        return postRepository.save(post);
     }
 
     @Override
@@ -103,9 +102,7 @@ public class PostServiceImpl implements PostService{
             post.setContent(dto.getContent());
         }
         post.setCategory(category);
-        postRepository.save(post);
-
-        return post;
+        return postRepository.save(post);
     }
 
     @Override
