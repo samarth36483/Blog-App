@@ -57,6 +57,8 @@ public class SecurityConfig {
                         //auth.anyRequest().authenticated()
                         auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll()  // no authentication required for GET requests, other than it are all authenticated
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()
                 ).exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
