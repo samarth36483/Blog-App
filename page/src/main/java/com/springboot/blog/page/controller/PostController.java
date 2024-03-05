@@ -5,7 +5,10 @@ import com.springboot.blog.page.dto.PostResponse;
 import com.springboot.blog.page.model.Post;
 import com.springboot.blog.page.service.PostService;
 import com.springboot.blog.page.utils.AppConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ import static com.springboot.blog.page.utils.AppConstants.*;
 
 @RestController
 @RequestMapping("/api/posts")
+@Tag(
+        name = "CRUD APIs for Post resource"
+)
 public class PostController {
 
     private PostService postService;
@@ -33,6 +39,15 @@ public class PostController {
         this.postService = postService;
     }
 
+    @Operation(
+            summary = "Create Post Rest API",
+            description = "Create Post Rest API is used to create new Post into database",
+            method = "POST"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP status 201 Created"
+    )
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
@@ -44,6 +59,15 @@ public class PostController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Get all Posts Rest API",
+            description = "Get all Posts Rest API is used to fetch all Posts from database",
+            method = "GET"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     @GetMapping
     public PostResponse getAllPosts(
             @RequestParam(value = "pageNo", defaultValue = DEFAULT_PAGE_NO, required = false) int pageNo,
@@ -54,6 +78,15 @@ public class PostController {
         return postService.getAllPosts(pageNo, pageSize, sortBy, sortDir);
     }
 
+    @Operation(
+            summary = "Get Post by Id Rest API",
+            description = "Get Post by Id Rest API is used to fetch Post by id from database",
+            method = "GET"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long id){
         Post post = postService.getPostById(id);
@@ -61,12 +94,30 @@ public class PostController {
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Get Post by category Rest API",
+            description = "Get Post by category Rest API is used to fetch Post by category from database",
+            method = "GET"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     @GetMapping("/category/{category_id}")
     public ResponseEntity<List<PostDTO>> getPostByCategory(@PathVariable long category_id){
         List<PostDTO> posts = postService.getPostByCategory(category_id);
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Update Post Rest API",
+            description = "Update Post Rest API is used to update Post in database",
+            method = "PUT"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
@@ -78,6 +129,15 @@ public class PostController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete Post Rest API",
+            description = "Delete Post Rest API is used to delete Post from database",
+            method = "DELETE"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
